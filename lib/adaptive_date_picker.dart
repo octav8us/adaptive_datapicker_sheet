@@ -1,6 +1,5 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, prefer_if_null_operators, prefer_const_constructors
 
-
 import 'package:adaptive_date_picker/localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -173,7 +172,7 @@ class Picker {
   ///
   /// Build picker control
   Widget makePicker([ThemeData? themeData, bool isModal = false, Key? key]) {
-    print("it comes");
+    
     _maxLevel = adapter.maxLevel;
     adapter.picker = this;
     adapter.initSelects();
@@ -232,7 +231,7 @@ class Picker {
         useRootNavigator: useRootNavigator,
         backgroundColor: backgroundColor,
         builder: (BuildContext context) {
-          builder!=null ? print("true builde") : print("false builder");
+
             final picker = makePicker(themeData, true);
           return builder == null ? picker : builder(context, picker);
          
@@ -395,14 +394,14 @@ class PickerWidgetState<T> extends State<_PickerWidget> {
   @override
   void initState() {
     super.initState();
-    print("1");
+    
     picker._state = this;
-    print("2");
+    
     picker.adapter.doShow();
-    print("3");
+    
 
     if (scrollController.length == 0) {
-      print("True true : ${picker._maxLevel}");
+      
       for (int i = 0; i < picker._maxLevel; i++) {
         scrollController
             .add(FixedExtentScrollController(initialItem: picker.selecteds[i]));
@@ -441,7 +440,7 @@ class PickerWidgetState<T> extends State<_PickerWidget> {
     if (!picker.hideHeader) {
      
       if (picker.builderHeader != null) {
-         print("the hidegeader is : ${picker.builderHeader}");
+         
         _body.add(picker.headerDecoration == null
             ? 
             picker.builderHeader!(context)
@@ -568,7 +567,7 @@ class PickerWidgetState<T> extends State<_PickerWidget> {
   final Map<int, int> lastData = {};
 
   List<Widget> _buildViews() {
-    if (__printDebug) print("_buildViews");
+    
     if (theme == null) theme = Theme.of(context);
     for (int j = 0; j < _keys.length; j++) _keys[j] = null;
 
@@ -597,7 +596,7 @@ class PickerWidgetState<T> extends State<_PickerWidget> {
                     builder: (context, state) {
                       _keys[i] = state;
                       adapter.setColumn(i - 1);
-                      if (__printDebug) print("builder. col: $i");
+                      
 
                       // 上一次是空列表
                       final _lastIsEmpty = scrollController[i].hasClients &&
@@ -612,7 +611,7 @@ class PickerWidgetState<T> extends State<_PickerWidget> {
                               picker.selecteds[i] >= _length)) {
                         Timer(Duration(milliseconds: 100), () {
                           if (!this.mounted) return;
-                          if (__printDebug) print("timer last");
+                          
                           var _len = adapter.length;
                           var _index = (_len < _length ? _len : _length) - 1;
                           if (scrollController[i]
@@ -681,7 +680,7 @@ class PickerWidgetState<T> extends State<_PickerWidget> {
         
         if (_length <= 0) return;
         var index = _index % _length;
-        print("onSelectedItemChanged. col: $i, row: $index");
+        
         Map<String,int> req={"Column":i,"Row":index};
         picker.onchanged!(req);
          
@@ -913,7 +912,7 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
         }
       }
     }
-    if (__printDebug) print("data.length: ${data.length}");
+    
   }
 
   _parsePickerDataItem(List? pickerData, List<PickerItem> data) {
@@ -932,14 +931,14 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
           var _o = map[_mapList[j]];
           if (_o is List && _o.length > 0) {
             List<PickerItem<T>> _children = <PickerItem<T>>[];
-            //print('add: ${data.runtimeType.toString()}');
+            
             data.add(PickerItem<T>(value: _mapList[j], children: _children));
             _parsePickerDataItem(_o, _children);
           }
         }
       } else if (T == String && !(item is List)) {
         String _v = item.toString();
-        //print('add: $_v');
+        
         data.add(PickerItem<T>(value: _v as T));
       }
     }
@@ -949,7 +948,7 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
     if (_datas != null && _col == index + 1) return;
     _col = index + 1;
     if (isArray) {
-      if (__printDebug) print("index: $index");
+      
       if (_col < data.length)
         _datas = data[_col].children;
       else

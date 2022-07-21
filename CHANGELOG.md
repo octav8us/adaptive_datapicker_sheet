@@ -1,3 +1,2 @@
 ## 0.0.1
-
-* TODO: Describe initial release.
+   Implementing modal bottom sheet date picker using cupertino builder with hands_free_scrolling 

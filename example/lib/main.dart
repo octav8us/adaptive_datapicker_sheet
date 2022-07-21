@@ -1,5 +1,3 @@
-
-
 import 'package:adaptive_date_picker/adaptive_date_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -43,6 +41,7 @@ class CustomCalendarPage extends StatefulWidget {
 
 class _CustomCalendarPageState extends State<CustomCalendarPage>
     with WidgetsBindingObserver {
+      
   final List<String> months = [
     'January',
     'February',
@@ -72,7 +71,12 @@ class _CustomCalendarPageState extends State<CustomCalendarPage>
   ];
 
   @override
-  
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showCustomPicker();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +88,7 @@ class _CustomCalendarPageState extends State<CustomCalendarPage>
             ElevatedButton(
               onPressed: () {
                 // buildPicker();
-                 showPickerDateTimeRoundBg(context);
+                 _showCustomPicker();
               },
               child: const Text('show picker'),
             ),
@@ -94,25 +98,30 @@ class _CustomCalendarPageState extends State<CustomCalendarPage>
     );
   }
 
-  showPickerDateTimeRoundBg(BuildContext context) {
-    var picker = Picker(
+  void _showCustomPicker() {
+    Picker(
       height: 192,
-        backgroundColor: Colors.transparent,
-        headerDecoration: BoxDecoration(
-            border:
-                Border(bottom: BorderSide(color: Colors.black12))),
-                selectionOverlay: Container(
+      
+      itemExtent: 40,
+      textScaleFactor: 0,
+      squeeze: 1,
+      builderHeader: (_)=> const SizedBox.shrink(),
+      
+      selectionOverlay: Container(
         padding: const EdgeInsets.all(5),
         decoration: const BoxDecoration(
           border: Border.symmetric(
             horizontal: BorderSide(
               color: Colors.black12,
-             
+              width: 1.0,
             ),
           ),
         ),
       ),
-        adapter: PickerDataAdapter(
+      onchanged: (req) {
+        print("the req is : $req");
+      },
+      adapter: PickerDataAdapter(
         data: [
           for (int i = 0; i < months.length; i++)
             PickerItem(
@@ -136,40 +145,9 @@ class _CustomCalendarPageState extends State<CustomCalendarPage>
               ],
             ),
         ],
-      ),
-        delimiter: [
-          PickerDelimiter(
-              column: 3,
-              child: Container(
-                width: 8.0,
-                alignment: Alignment.center,
-              )),
-          PickerDelimiter(
-              column: 5,
-              child: Container(
-                width: 12.0,
-                alignment: Alignment.center,
-                child: Text(':', style: TextStyle(fontWeight: FontWeight.bold)),
-                color: Colors.white,
-              )),
-        ],
         
-        onConfirm: (Picker picker, List value) {
-          print("priits : ${picker.adapter.text}");
-        },
-        onSelect: (Picker picker, int index, List<int> selected) {
-         
-        });
-    picker.showModal(context, backgroundColor: Colors.transparent,
-        builder: (context, view) {
-      return Material(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-          child: Container(
-            padding: const EdgeInsets.only(top: 14,left:5,right:5),
-            child: view,
-          ));
-    });
+      ),
+
+    ).showModal(context);
   }
 }
