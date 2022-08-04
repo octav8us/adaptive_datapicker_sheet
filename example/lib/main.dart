@@ -42,41 +42,11 @@ class CustomCalendarPage extends StatefulWidget {
 class _CustomCalendarPageState extends State<CustomCalendarPage>
     with WidgetsBindingObserver {
       
-  final List<String> months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
-  ];
-  final List<String> years = [
-    '2020',
-    '2021',
-    '2022',
-    '2023',
-    '2024',
-    '2025',
-    '2026',
-    '2027',
-    '2028',
-    '2029',
-    '2030',
-  ];
-
+ 
+  
+ 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _showCustomPicker();
-    });
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -87,8 +57,9 @@ class _CustomCalendarPageState extends State<CustomCalendarPage>
           children: [
             ElevatedButton(
               onPressed: () {
-                // buildPicker();
-                 _showCustomPicker();
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showCustomPicker();
+    });
               },
               child: const Text('show picker'),
             ),
@@ -118,10 +89,14 @@ class _CustomCalendarPageState extends State<CustomCalendarPage>
           ),
         ),
       ),
+      
       onchanged: (req) {
         print("the req is : $req");
       },
-      adapter: PickerDataAdapter(
+      // yearfrom: 2005,
+      // yearto: 2050,
+      adapter:  PickerDataAdapter(
+
         data: [
           for (int i = 0; i < months.length; i++)
             PickerItem(
@@ -133,11 +108,11 @@ class _CustomCalendarPageState extends State<CustomCalendarPage>
               ),
               value: i,
               children: [
-                for (int i = 0; i < years.length; i++)
+                for (int i = 0; i < Generateyears.length; i++)
                   PickerItem(
                       text: Center(
                         child: Text(
-                          years[i],
+                          Generateyears[i],
                           textAlign: TextAlign.left,
                         ),
                       ),

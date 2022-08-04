@@ -1,4 +1,4 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers, prefer_if_null_operators, prefer_const_constructors
+// ignore_for_file: no_leading_underscores_for_local_identifiers, prefer_if_null_operators, prefer_const_constructors, unnecessary_this
 
 import 'package:adaptive_date_picker/localizations.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,15 +9,63 @@ import 'dart:async';
 
 
 const bool __printDebug = false;
+ final List<dynamic>months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
+ final List<dynamic> Generateyears = [
+  "2000",
+  "2001",
+  "2002",
+  "2003",
+  "2004",
+  "2005",
+  "2006",
+  "2007",
+  "2008",
+  "2009",
+  "2010",
+  "2011",
+  "2012",
+  "2013",
+  "2014",
+  "2015",
+  "2016",
+  "2017",
+  "2018",
+  "2019",
+  "2020",
+  "2021",
+  "2022",
+  "2023",
+  "2024",
+  "2025",
+  "2026",
+  "2027",
+  "2028",
+  "2029",
+  "2030",
 
+  ];
 /// Picker selected callback.
 typedef PickerSelectedCallback = void Function(
     Picker picker, int index, List<int> selected);
 
 typedef Pickerset = void Function(
-  Map<String,int> index);
+  Map<dynamic,dynamic> index);
 
 
+   
 /// Picker confirm callback.
 typedef PickerConfirmCallback = void Function(
     Picker picker, List<int> selected);
@@ -55,7 +103,9 @@ class Picker {
   final PickerConfirmCallback? onConfirm;
   final PickerConfirmBeforeCallback? onConfirmBefore;
   final Pickerset? onchanged;
-
+  
+  final int? yearfrom;
+  final int? yearto;
   /// When the previous level selection changes, scroll the child to the first item.
   final changeToFirst;
 
@@ -67,7 +117,7 @@ class Picker {
   final Widget? confirm;
   final String? cancelText;
   final String? confirmText;
-
+  
   final double height;
 
   /// Height of list item
@@ -99,7 +149,7 @@ class Picker {
   final PickerItemBuilder? onBuilderItem;
 
   /// List item loop
-  final bool looping;
+  final bool? looping;
 
   /// Delay generation for smoother animation, This is the number of milliseconds to wait. It is recommended to > = 200
   final int smooth;
@@ -143,7 +193,7 @@ class Picker {
       this.builderHeader,
       this.changeToFirst = false,
       this.hideHeader = false,
-      this.looping = false,
+      this.looping,
       this.reversedOrder = false,
       this.headerDecoration,
       this.columnFlex,
@@ -157,22 +207,51 @@ class Picker {
       this.onCancel,
       this.onSelect,
       this.onConfirmBefore,
-      this.onConfirm,this.onchanged}
+      this.onConfirm,this.onchanged,
+      this.yearfrom,this.yearto
+      }
     
     
       ) {
+      
+        // if(this.yearfrom!=null &&this.yearto!=null){
+        //    var start=this.yearfrom;
+        //   var end=this.yearto;
+        //     if(int.parse(start.toString())<int.parse(end.toString())){
+        //        for(var i=start;i!<=end!;i++){
+        //       Generateyears.add(i.toString());
+        //      }
+        //     }
+        //     else{
+        //       for(var i=1990;i<=2050;i++){
+        //       Generateyears.add(i.toString());
+        //      }
+        //     }
+        // }
+        // else if(this.yearfrom!=null &&this.yearto==null){
+        //   var start=this.yearfrom;
+         
+        //      for(var i=start;i!<=2050;i++){
+        //       Generateyears.add(i.toString());
+        //      }
+        // }
+        // else{
+        //    for(var i=1990;i<=2050;i++){
+        //       Generateyears.add(i.toString());
+        //      }
+        // }
     this.selecteds = selecteds == null ? <int>[] : selecteds;
   }
-
+  
   Widget? get widget => _widget;
   PickerWidgetState? get state => _state;
   int _maxLevel = 1;
-
+  
   /// 生成picker控件
   ///
   /// Build picker control
   Widget makePicker([ThemeData? themeData, bool isModal = false, Key? key]) {
-    
+   
     _maxLevel = adapter.maxLevel;
     adapter.picker = this;
     adapter.initSelects();
@@ -194,6 +273,7 @@ class Picker {
     PickerWidgetBuilder? builder,
   }) {
     state.showBottomSheet((BuildContext context) {
+      
       final picker = makePicker(themeData);
       return builder == null ? picker : builder(context, picker);
     }, backgroundColor: backgroundColor);
@@ -206,6 +286,7 @@ class Picker {
         Color? backgroundColor,
         PickerWidgetBuilder? builder,
       }) {
+      
     Scaffold.of(context).showBottomSheet((BuildContext context) {
       final picker = makePicker(themeData);
       return builder == null ? picker : builder(context, picker);
@@ -219,6 +300,8 @@ class Picker {
       bool useRootNavigator = false,
       Color? backgroundColor,
       PickerWidgetBuilder? builder}) async {
+        await Generateyears;
+       
     return await showModalBottomSheet<T>(
             
         context: context, //state.context,
@@ -609,6 +692,7 @@ class PickerWidgetState<T> extends State<_PickerWidget> {
                       if (_lastIsEmpty ||
                           (!picker.changeToFirst &&
                               picker.selecteds[i] >= _length)) {
+                                
                         Timer(Duration(milliseconds: 100), () {
                           if (!this.mounted) return;
                           
@@ -662,32 +746,44 @@ class PickerWidgetState<T> extends State<_PickerWidget> {
   Widget _buildCupertinoPicker(BuildContext context,
       int i, int _length, PickerAdapter adapter, Key? key) {
     return CupertinoPicker.builder(
+      
       key: key,
-      backgroundColor: picker.backgroundColor,
+      
+      backgroundColor: Colors.transparent,
       scrollController: scrollController[i],
       itemExtent: picker.itemExtent,
-      // looping: picker.looping,
+      
       magnification: picker.magnification,
       diameterRatio: picker.diameterRatio,
       squeeze: picker.squeeze,
       selectionOverlay: picker.selectionOverlay,
-      childCount: picker.looping ? null : _length,
+      childCount:  200,
       itemBuilder: (context, index) {
         adapter.setColumn(i - 1);
         return adapter.buildItem(context, index % _length);
       },
       onSelectedItemChanged: (int _index) {
-        
+         
         if (_length <= 0) return;
         var index = _index % _length;
         
-        Map<String,int> req={"Column":i,"Row":index};
-        picker.onchanged!(req);
+        // Map<String,int> req={"Column":i,"Row":index};
+        if(i==0){
+          
+          Map<dynamic,dynamic> req={"Month":months[index],"Year":i};
+           picker.onchanged!(req);
+        }
+        else{
+          Map<dynamic,dynamic> req={"Month":i,"Year":Generateyears[index]};
+           picker.onchanged!(req);
+        }
+       
          
         picker.selecteds[i] = index;
         updateScrollController(i);
         adapter.doSelect(i, index);
         if (picker.changeToFirst) {
+          
           for (int j = i + 1; j < picker.selecteds.length; j++) {
             picker.selecteds[j] = 0;
             scrollController[j].jumpTo(0.0);
@@ -697,6 +793,7 @@ class PickerWidgetState<T> extends State<_PickerWidget> {
           picker.onSelect!(picker, i, picker.selecteds);
 
         if (adapter.needUpdatePrev(i)) {
+          
           for (int j = 0; j < picker.selecteds.length; j++) {
             if (j != i && _keys[j] != null) {
               adapter.setColumn(j - 1);
@@ -741,6 +838,7 @@ class PickerWidgetState<T> extends State<_PickerWidget> {
 
 /// 选择器数据适配器
 abstract class PickerAdapter<T> {
+  
   Picker? picker;
 
   int getLength();
@@ -863,7 +961,7 @@ abstract class PickerAdapter<T> {
 
 /// 数据适配器
 class PickerDataAdapter<T> extends PickerAdapter<T> {
-  late List<PickerItem<T>> data;
+ late List<PickerItem<T>> data;
   List<PickerItem<dynamic>>? _datas;
   int _maxLevel = -1;
   int _col = 0;
@@ -871,6 +969,7 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
 
   PickerDataAdapter(
       {List? pickerdata, List<PickerItem<T>>? data, this.isArray = false}) {
+        
     this.data = data ?? <PickerItem<T>>[];
     _parseData(pickerdata);
   }
@@ -881,6 +980,7 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
   }
 
   void _parseData(List? pickerData) {
+    
     if (pickerData != null && pickerData.length > 0 && (data.length == 0)) {
       if (isArray) {
         _parseArrayPickerDataItem(pickerData, data);
@@ -888,6 +988,7 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
         _parsePickerDataItem(pickerData, data);
       }
     }
+    
   }
 
   _parseArrayPickerDataItem(List? pickerData, List<PickerItem> data) {
@@ -916,6 +1017,7 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
   }
 
   _parsePickerDataItem(List? pickerData, List<PickerItem> data) {
+    
     if (pickerData == null) return;
     var len = pickerData.length;
     for (int i = 0; i < len; i++) {
@@ -977,6 +1079,9 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
 
   @override
   getMaxLevel() {
+    // await Generateyears;
+    
+    
     if (_maxLevel == -1) _checkPickerDataLevel(data, 1);
     return _maxLevel;
   }
@@ -1008,10 +1113,14 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
 
   @override
   void initSelects() {
-    // ignore: unnecessary_null_comparison
-    if (picker!.selecteds == null) picker!.selecteds = <int>[];
+    //  print("set init is : ${picker!.selecteds} and length is : ${picker!.selecteds.length} and maxlevel is : $_maxLevel");
+    
+    if (picker!.selecteds == null){
+      
+       picker!.selecteds = <int>[];
+    }
     if (picker!.selecteds.length == 0) {
-      for (int i = 0; i < _maxLevel; i++) picker!.selecteds.add(0);
+      for (int i = 0; i < 2; i++) picker!.selecteds.add(0);
     }
   }
 
@@ -1042,11 +1151,14 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
   _checkPickerDataLevel(List<PickerItem>? data, int level) {
     if (data == null) return;
     if (isArray) {
+      
       _maxLevel = data.length;
       return;
     }
+    // print("the total data ength is : ${data.length} and level : $level, isarray : $isArray");
     for (int i = 0; i < data.length; i++) {
-      if (data[i].children != null && data[i].children!.length > 0)
+      if (data[i].children != null && data[i].children!.length > 0) 
+
         _checkPickerDataLevel(data[i].children, level + 1);
     }
     if (_maxLevel < level) _maxLevel = level;
@@ -1137,6 +1249,7 @@ class NumberPickerAdapter extends PickerAdapter<int> {
 
   @override
   void initSelects() {
+    
     int _maxLevel = getMaxLevel();
     // ignore: unnecessary_null_comparison
     if (picker!.selecteds == null) picker!.selecteds = <int>[];
@@ -1466,6 +1579,7 @@ class DateTimePickerAdapter extends PickerAdapter<DateTime> {
 
   @override
   int getMaxLevel() {
+    
     return customColumnType == null
         ? lengths[type].length
         : customColumnType!.length;
@@ -1580,6 +1694,7 @@ class DateTimePickerAdapter extends PickerAdapter<DateTime> {
 
   @override
   void doShow() {
+    
     if (_yearBegin == 0) getLength();
     var _maxLevel = getMaxLevel();
     for (int i = 0; i < _maxLevel; i++) {
