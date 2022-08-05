@@ -23,7 +23,8 @@ import 'package:jiffy/jiffy.dart';
     'November',
     'December'
   ];
-  List<dynamic> Generateyears = [];
+  final List<dynamic> Generateyears = [
+ ];
 
 typedef Pickerset = void Function(
   Map<dynamic,dynamic> index);
@@ -112,7 +113,32 @@ final Decoration? headerDecoration;
       this.onchanged,
       this.yearfrom,this.yearto
       } ) {
-      
+      if(this.yearfrom!=null &&this.yearto!=null){
+           var start=this.yearfrom;
+          var end=this.yearto;
+            if(int.parse(start.toString())<int.parse(end.toString())){
+               for(var i=start;i!<=end!;i++){
+              Generateyears.add(i.toString());
+             }
+            }
+            else{
+              for(var i=1990;i<=2050;i++){
+              Generateyears.add(i.toString());
+             }
+            }
+        }
+        else if(this.yearfrom!=null &&this.yearto==null){
+          var start=this.yearfrom;
+         
+             for(var i=start;i!<=2050;i++){
+              Generateyears.add(i.toString());
+             }
+        }
+        else{
+           for(var i=1990;i<=2050;i++){
+              Generateyears.add(i.toString());
+             }
+        }
         
     this.selecteds = selecteds == null ? <int>[] : selecteds;
   }
@@ -171,6 +197,13 @@ final Decoration? headerDecoration;
          
         });
   }
+
+  
+
+
+
+
+  
 }
 
 
@@ -179,11 +212,19 @@ class PickerDelimiter {
   final int column;
   PickerDelimiter({required this.child, this.column = 1});
 }
+
+
 class PickerItem<T> {
- final Widget? text;
-final T? value;
-final List<PickerItem<T>>? children;
-PickerItem({this.text, this.value, this.children});
+ 
+  final Widget? text;
+
+ 
+  final T? value;
+
+ 
+  final List<PickerItem<T>>? children;
+
+  PickerItem({this.text, this.value, this.children});
 }
 
 class PickerWidget<T> extends InheritedWidget {
@@ -321,7 +362,6 @@ List<Widget> items = [];
                           if (scrollController[i]
                               .position
                               .hasContentDimensions) {
-                           
                                 
                             scrollController[i].jumpToItem(_index);
                           } else {
@@ -500,7 +540,7 @@ abstract class PickerAdapter<T> {
 /// 数据适配器
 class PickerDataAdapter<T> extends PickerAdapter<T> {
   
-  List<PickerItem<T>>? data;
+  late List<PickerItem<T>> data;
   List<PickerItem<dynamic>>? _datas;
   int _maxLevel = -1;
   int _col = 0;
@@ -508,22 +548,23 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
 
   PickerDataAdapter(
       {List? pickerdata, List<PickerItem<T>>? data, this.isArray = false}) {
-        
+        // print("the form is : ${picker!.yearfrom}");
         
         
     this.data = data ?? <PickerItem<T>>[];
-     
+     print("the data after binded is : $data");
+     print(this.data);
     _parseData(pickerdata);
   }
 
   
   void _parseData(List? pickerData) {
     
-    if (pickerData != null && pickerData.length > 0 && (data!.length == 0)) {
+    if (pickerData != null && pickerData.length > 0 && (data.length == 0)) {
       if (isArray) {
-        _parseArrayPickerDataItem(pickerData, data!);
+        _parseArrayPickerDataItem(pickerData, data);
       } else {
-        _parsePickerDataItem(pickerData, data!);
+        _parsePickerDataItem(pickerData, data);
       }
     }
     
@@ -590,9 +631,9 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
     _col = index + 1;
     if (isArray) {
       
-      if (_col < data!.length)
+      if (_col < data.length)
         {
-          _datas = data![_col].children;
+          _datas = data[_col].children;
         }
       else
         {
@@ -656,16 +697,16 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
 
   @override
   void initSelects() {
-    
+    //  print("set init is : ${picker!.selecteds} and length is : ${picker!.selecteds.length} and maxlevel is : $_maxLevel");
     
     if (picker!.selecteds == null){
-      
+      print("the selcted null : ${picker!.selecteds}");
       
        picker!.selecteds = <int>[];
     }
     if (picker!.selecteds.length == 0) {
        final DateTime now = DateTime.now();
-      
+      print("the selcted length : ${now}");
       var y=Jiffy(now,"yyyy-mm-dd hh:mm:ssZ").format("yyyy");
       var m=Jiffy(now,"yyyy-mm-dd hh:mm:ssZ").format("MMMM");
       
@@ -702,7 +743,7 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
       _maxLevel = data.length;
       return;
     }
-    
+    print("the total data length is : ${data.length} and level : $level, isarray : $isArray");
     for (int i = 0; i < data.length; i++) {
       if (data[i].children != null && data[i].children!.length > 0) 
 

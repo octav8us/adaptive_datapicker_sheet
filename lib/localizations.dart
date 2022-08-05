@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, prefer_final_fields, no_leading_underscores_for_local_identifiers
+
 import 'package:flutter/material.dart';
 
 abstract class PickerLocalizationsBase {
