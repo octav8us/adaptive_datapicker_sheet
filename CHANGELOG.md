@@ -7,3 +7,5 @@
    DatePicker with started with current month and year
    fixing some issues
    Reduced lines of code
+## 0.0.5
+   Fixing Issues and Improved Performance

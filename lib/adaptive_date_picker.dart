@@ -8,7 +8,8 @@ import 'dart:async';
 import 'package:jiffy/jiffy.dart';
 
 
-
+  int ind=0;
+      int index=0;
   final List<dynamic>months = [
     'January',
     'February',
@@ -65,7 +66,7 @@ final bool hideHeader;
 final bool reversedOrder;
 final WidgetBuilder? builderHeader;
 final PickerItemBuilder? onBuilderItem;
-
+final List PassValues;
 final int smooth;
 final Widget? footer;
 final Widget selectionOverlay;
@@ -74,11 +75,11 @@ final Decoration? headerDecoration;
   final double magnification;
   final double diameterRatio;
   final double squeeze;
-
+  
   Widget? _widget;
   PickerWidgetState? _state;
-
-  Picker(
+  
+  Picker( 
       {required this.adapter,
       this.delimiter,
       List<int>? selecteds,
@@ -110,7 +111,7 @@ final Decoration? headerDecoration;
       this.onBuilderItem,
       this.onCancel,
       this.onchanged,
-      this.yearfrom,this.yearto
+      this.yearfrom,this.yearto,required this.PassValues
       } ) {
       
         
@@ -385,15 +386,17 @@ Widget _buildCupertinoPicker(BuildContext context,
         adapter.setColumn(i-1);
         return adapter.buildItem(context, index % _length);
       },
-      onSelectedItemChanged: (int _index) {
+      onSelectedItemChanged: (int _ind) {
         if (_length <= 0) return;
-        var index = _index % _length;
+        var _index = _ind % _length;
         if(i==0){
-          Map<dynamic,dynamic> req={"Month":months[index],"Year":i};
+          ind=_index;
+          Map<dynamic,dynamic> req={"Month":months[_index],"Year":Generateyears[index]};
            picker.onchanged!(req);
         }
         else{
-          Map<dynamic,dynamic> req={"Month":i,"Year":Generateyears[index]};
+          index=_index;
+          Map<dynamic,dynamic> req={"Month":months[ind],"Year":Generateyears[_index]};
            picker.onchanged!(req);
         }
        },
@@ -663,8 +666,29 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
       
        picker!.selecteds = <int>[];
     }
-    if (picker!.selecteds.length == 0) {
-       final DateTime now = DateTime.now();
+    if(picker!.selecteds.length == 0) {
+      if(picker!.PassValues!=null){
+        
+      
+      for(int i=0;i<months.length;i++){
+        if(months[i]==picker!.PassValues[0]["Month"]){
+          
+           picker!.selecteds.add(i);
+           ind=i;
+        }
+      }
+      for(int j=0;j<Generateyears.length;j++){
+        if(picker!.PassValues[0]["Year"].toString()==Generateyears[j].toString()){
+          
+          index=j;
+          picker!.selecteds.add(j);
+        }
+      }
+      picker?.onchanged!({"Month":months[ind],"Year":Generateyears[index]});
+      }
+       else{
+        print("the getter value is : ${picker!.PassValues}");
+        final DateTime now = DateTime.now();
       
       var y=Jiffy(now,"yyyy-mm-dd hh:mm:ssZ").format("yyyy");
       var m=Jiffy(now,"yyyy-mm-dd hh:mm:ssZ").format("MMMM");
@@ -687,8 +711,10 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
           picker!.selecteds.add(j);
         }
       }
-      picker?.onchanged!({"Month":months[ind],"Year":Generateyears[index]});
-      // for (int i = 0; i < 2; i++) picker!.selecteds.add(1);
+       picker?.onchanged!({"Month":months[ind],"Year":Generateyears[index]});
+       }
+     
+      for (int i = 0; i < 2; i++) picker!.selecteds.add(1);
     }
   }
 

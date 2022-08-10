@@ -1,6 +1,6 @@
 name: adaptive_date_picker
-description: Cupertiono Datepicker with round modal bottomsheet.
-version: 0.0.4
+description: Cupertino Datepicker with round modal bottomsheet.
+version: 0.0.5
 homepage: https://github.com/karthick-picco/adaptive_datapicker_sheet.git
 
 environment:
