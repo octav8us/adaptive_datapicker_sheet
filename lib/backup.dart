@@ -44,13 +44,13 @@ final List<PickerDelimiter>? delimiter;
 final VoidCallback? onCancel;
 
   final Pickerset? onchanged;
-  
+
   final int? yearfrom;
   final int? yearto;
-  
+
 final List<int>? columnFlex;
 final Widget? title;
- 
+
   final double height;
 final double itemExtent;
  TextStyle? textStyle,
@@ -129,7 +129,7 @@ final Decoration? headerDecoration;
         }
         else if(this.yearfrom!=null &&this.yearto==null){
           var start=this.yearfrom;
-         
+
              for(var i=start;i!<=2050;i++){
               Generateyears.add(i.toString());
              }
@@ -139,20 +139,20 @@ final Decoration? headerDecoration;
               Generateyears.add(i.toString());
              }
         }
-        
+
     this.selecteds = selecteds == null ? <int>[] : selecteds;
   }
-  
+
   Widget? get widget => _widget;
   PickerWidgetState? get state => _state;
   int _maxLevel = 1;
-  
+
   Widget makePicker([ThemeData? themeData, bool isModal = false, Key? key]) {
-     
+
     _maxLevel = adapter.maxLevel;
-    
+
     adapter.picker = this;
-    
+
     adapter.initSelects();
     _widget = PickerWidget(
 
@@ -165,9 +165,9 @@ final Decoration? headerDecoration;
     return _widget!;
   }
 
-  
 
-  
+
+
 
   /// Display modal picker
   Future<T?> showModal<T>(BuildContext context,
@@ -176,34 +176,34 @@ final Decoration? headerDecoration;
       bool useRootNavigator = false,
       Color? backgroundColor,
       PickerWidgetBuilder? builder}) async {
-         
-       
+
+
     return await showModalBottomSheet<T>(
-            
+
         context: context, //state.context,
          shape: const RoundedRectangleBorder( // <-- SEE HERE
-          borderRadius: BorderRadius.vertical( 
+          borderRadius: BorderRadius.vertical(
             top: Radius.circular(25.0),
           ),
-        ), 
+        ),
         isScrollControlled: isScrollControlled,
         useRootNavigator: useRootNavigator,
         backgroundColor: backgroundColor,
         builder: (BuildContext context) {
 
             final picker = makePicker(themeData, true);
-            
+
           return builder == null ? picker : builder(context, picker);
-         
+
         });
   }
 
-  
 
 
 
 
-  
+
+
 }
 
 
@@ -215,13 +215,13 @@ class PickerDelimiter {
 
 
 class PickerItem<T> {
- 
+
   final Widget? text;
 
- 
+
   final T? value;
 
- 
+
   final List<PickerItem<T>>? children;
 
   PickerItem({this.text, this.value, this.children});
@@ -267,9 +267,9 @@ class PickerWidgetState<T> extends State<_PickerWidget> {
   void initState() {
     super.initState();
      picker._state = this;
-   
+
     if (scrollController.length == 0) {
-      
+
       for (int i = 0; i < picker._maxLevel; i++) {
         scrollController
             .add(FixedExtentScrollController(initialItem: picker.selecteds[i]));
@@ -280,7 +280,7 @@ class PickerWidgetState<T> extends State<_PickerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    
+
     theme = themeData ?? Theme.of(context);
 
     if (_wait && picker.smooth > 0) {
@@ -296,21 +296,21 @@ class PickerWidgetState<T> extends State<_PickerWidget> {
         _wait = false;
       });
     }
-     
+
 
     final _body = <Widget>[];
-    
+
     if (!picker.hideHeader) {
-     
+
       if (picker.builderHeader != null) {
-         
+
         _body.add(picker.headerDecoration == null
-            ? 
+            ?
             picker.builderHeader!(context)
             : DecoratedBox(
                 child: picker.builderHeader!(context),
                 decoration: picker.headerDecoration!));
-      } 
+      }
     }
 List<Widget> _buildViews() {
     if (theme == null) theme = Theme.of(context);
@@ -324,7 +324,7 @@ List<Widget> items = [];
         color: picker.containerColor == null
             ? theme!.dialogBackgroundColor
             : picker.containerColor
-            
+
       );
 
       for (int i = 0; i < picker._maxLevel; i++) {
@@ -333,14 +333,14 @@ List<Widget> items = [];
           child: Container(
             margin: const EdgeInsets.only(top: 20),
             height: picker.height-20,
-           
+
             child: _wait
                 ? null
                 : StatefulBuilder(
                     builder: (context, state) {
                       _keys[i] = state;
                       adapter.setColumn(i - 1);
-                      
+
 
                       // 上一次是空列表
                       final _lastIsEmpty = scrollController[i].hasClients &&
@@ -353,19 +353,19 @@ List<Widget> items = [];
                       if (_lastIsEmpty ||
                           (
                               picker.selecteds[i] >= _length)) {
-                                
+
                         Timer(Duration(milliseconds: 100), () {
                           if (!this.mounted) return;
-                          
+
                           var _len = adapter.length;
                           var _index = (_len < _length ? _len : _length) - 1;
                           if (scrollController[i]
                               .position
                               .hasContentDimensions) {
-                                
+
                             scrollController[i].jumpToItem(_index);
                           } else {
-                           
+
                             scrollController[i] = FixedExtentScrollController(
                                 initialItem: _index);
                             if (_keys[i] != null) {
@@ -403,7 +403,7 @@ List<Widget> items = [];
       mainAxisSize: MainAxisSize.min,
       children: _body,
     );
-   
+
     return v;
   }
 bool _wait = true;
@@ -411,7 +411,7 @@ bool _wait = true;
 Widget _buildCupertinoPicker(BuildContext context,
       int i, int _length, PickerAdapter adapter, Key? key) {
     return CupertinoPicker.builder(
-      
+
       key: key,
       backgroundColor: Colors.transparent,
       scrollController: scrollController[i],
@@ -443,7 +443,7 @@ Widget _buildCupertinoPicker(BuildContext context,
 
 /// 选择器数据适配器
 abstract class PickerAdapter<T> {
-  
+
   Picker? picker;
 
   int getLength();
@@ -452,7 +452,7 @@ abstract class PickerAdapter<T> {
   void initSelects();
   Widget buildItem(BuildContext context, int index);
 
-  
+
 
   Widget makeText(Widget? child, String? text, bool isSel) {
     return Center(
@@ -466,7 +466,7 @@ abstract class PickerAdapter<T> {
                     fontFamily: picker?.state?.context != null
                         ? Theme.of(picker!.state!.context)
                             .textTheme
-                            .headline6!
+                            .titleLarge!
                             .fontFamily
                         : "",
                     fontSize: Picker.DefaultTextSize),
@@ -517,7 +517,7 @@ abstract class PickerAdapter<T> {
             )));
   }
 
- 
+
 
   int getColumnFlex(int column) {
     if (picker!.columnFlex != null && column < picker!.columnFlex!.length)
@@ -529,17 +529,17 @@ abstract class PickerAdapter<T> {
 
   int get maxLevel => getMaxLevel();
 
- 
+
   int get length => getLength();
 
-  
 
-  
+
+
 }
 
 /// 数据适配器
 class PickerDataAdapter<T> extends PickerAdapter<T> {
-  
+
   late List<PickerItem<T>> data;
   List<PickerItem<dynamic>>? _datas;
   int _maxLevel = -1;
@@ -549,17 +549,17 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
   PickerDataAdapter(
       {List? pickerdata, List<PickerItem<T>>? data, this.isArray = false}) {
         // print("the form is : ${picker!.yearfrom}");
-        
-        
+
+
     this.data = data ?? <PickerItem<T>>[];
      print("the data after binded is : $data");
      print(this.data);
     _parseData(pickerdata);
   }
 
-  
+
   void _parseData(List? pickerData) {
-    
+
     if (pickerData != null && pickerData.length > 0 && (data.length == 0)) {
       if (isArray) {
         _parseArrayPickerDataItem(pickerData, data);
@@ -567,7 +567,7 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
         _parsePickerDataItem(pickerData, data);
       }
     }
-    
+
   }
 
   _parseArrayPickerDataItem(List? pickerData, List<PickerItem> data) {
@@ -592,11 +592,11 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
         }
       }
     }
-    
+
   }
 
   _parsePickerDataItem(List? pickerData, List<PickerItem> data) {
-    
+
     if (pickerData == null) return;
     var len = pickerData.length;
     for (int i = 0; i < len; i++) {
@@ -612,14 +612,14 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
           var _o = map[_mapList[j]];
           if (_o is List && _o.length > 0) {
             List<PickerItem<T>> _children = <PickerItem<T>>[];
-            
+
             data.add(PickerItem<T>(value: _mapList[j], children: _children));
             _parsePickerDataItem(_o, _children);
           }
         }
       } else if (T == String && (item is List)) {
         String _v = item.toString();
-        
+
         data.add(PickerItem<T>(value: _v as T));
       }
     }
@@ -630,7 +630,7 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
     if (_datas != null && _col == index + 1) return;
     _col = index + 1;
     if (isArray) {
-      
+
       if (_col < data.length)
         {
           _datas = data[_col].children;
@@ -665,7 +665,7 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
 
   @override
   getMaxLevel() {
-    
+
    if (_maxLevel == -1) _checkPickerDataLevel(data, 1);
     return _maxLevel;
   }
@@ -698,10 +698,10 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
   @override
   void initSelects() {
     //  print("set init is : ${picker!.selecteds} and length is : ${picker!.selecteds.length} and maxlevel is : $_maxLevel");
-    
+
     if (picker!.selecteds == null){
       print("the selcted null : ${picker!.selecteds}");
-      
+
        picker!.selecteds = <int>[];
     }
     if (picker!.selecteds.length == 0) {
@@ -709,18 +709,18 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
       print("the selcted length : ${now}");
       var y=Jiffy(now,"yyyy-mm-dd hh:mm:ssZ").format("yyyy");
       var m=Jiffy(now,"yyyy-mm-dd hh:mm:ssZ").format("MMMM");
-      
+
       int ind=0;
       int index=0;
       for(int i=0;i<months.length;i++){
-        
+
         if(months[i]==m){
-          
+
            picker!.selecteds.add(i);
            ind=i;
-           
+
         }
-        
+
       }
       for(int j=0;j<Generateyears.length;j++){
         if(y.toString()==Generateyears[j]){
@@ -733,19 +733,19 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
     }
   }
 
-  
+
 
   _checkPickerDataLevel(List<PickerItem>? data, int level) {
-    
+
     if (data == null) return;
     if (isArray) {
-      
+
       _maxLevel = data.length;
       return;
     }
     print("the total data length is : ${data.length} and level : $level, isarray : $isArray");
     for (int i = 0; i < data.length; i++) {
-      if (data[i].children != null && data[i].children!.length > 0) 
+      if (data[i].children != null && data[i].children!.length > 0)
 
         _checkPickerDataLevel(data[i].children, level + 1);
     }
