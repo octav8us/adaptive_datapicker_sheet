@@ -690,8 +690,12 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
         print("the getter value is : ${picker!.PassValues}");
         final DateTime now = DateTime.now();
 
-      var y=Jiffy(now,"yyyy-mm-dd hh:mm:ssZ").format("yyyy");
-      var m=Jiffy(now,"yyyy-mm-dd hh:mm:ssZ").format("MMMM");
+      var y=Jiffy.parseFromDateTime(
+                        now,
+                      ).format(pattern: "yyyy");
+      var m= Jiffy.parseFromDateTime(
+                        now,
+                      ).format(pattern: "MMMM")
 
       int ind=0;
       int index=0;
