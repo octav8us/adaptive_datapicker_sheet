@@ -695,7 +695,7 @@ class PickerDataAdapter<T> extends PickerAdapter<T> {
                       ).format(pattern: "yyyy");
       var m= Jiffy.parseFromDateTime(
                         now,
-                      ).format(pattern: "MMMM")
+                      ).format(pattern: "MMMM");
 
       int ind=0;
       int index=0;
